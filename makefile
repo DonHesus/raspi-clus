@@ -16,12 +16,4 @@ install:
 	sudo cp system_files/dhcpd_setup_template $(DHCP_SETUP_DST)
 	sudo sed -i 's/<server_adapter>/$(SERVER_ADAPTER)/g' $(DHCP_SETUP_DST)
 	sudo cp system_files/dhcpd_setup_template $(TFTP_CONF_DST)
-	sudo sed -i 's/<tftp_location>/$(TFTP_SERVER_DST)/g' $(TFTP_CONF_DST)
-run:
-	@touch some_file
-
-test:
-	sed -i 's/<server_address>/$(SERVER_ADAPTER_MAC_ADDRESS)/g' $(TEST_FILE_DST)
-	@echo "Hello ${ADAPTER_MAC}"
-	@echo "Hello ${server_adapter}"
-	@echo $(TFTP_SERVER_DST)
+	sudo sed -i 's/<server_adapter>/$(TFTP_SERVER_DST)/g' $(TFTP_CONF_DST)

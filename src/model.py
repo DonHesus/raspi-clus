@@ -1,0 +1,2 @@
+class RaspberryPi:
+    pass

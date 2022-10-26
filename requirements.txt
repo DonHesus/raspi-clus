@@ -1,2 +1,2 @@
 flask <= 2.2.2
-Flask-RESTful <= 0.3.9
+ipaddress == 1.0.23

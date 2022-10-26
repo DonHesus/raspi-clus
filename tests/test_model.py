@@ -1,6 +1,6 @@
 import pytest
 
-from src.model import RaspberryPi
+from src.domain.model import RaspberryPi
 
 
 @pytest.fixture()

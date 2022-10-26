@@ -19,6 +19,9 @@ install:
 	sudo sed -i 's/<server_adapter>/$(SERVER_ADAPTER)/g' $(DHCP_SETUP_DST)
 	sudo cp system_files/tftp_config_template $(TFTP_CONF_DST)
 	sudo sed -i 's/<tftp_location>/$(TFTP_SERVER_DST)/g' $(TFTP_CONF_DST)
+	sudo chown tftp:tftp $(TFTP_SERVER_DST)
 
 run:
 	flask run
+
+monitor:

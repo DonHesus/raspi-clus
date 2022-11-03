@@ -3,5 +3,124 @@ info:
   version: 1.0.0
   title: RaspiClus API
   description: Documentation of a RaspiClus openapi
-paths:
 
+tags:
+  - name: Clusters
+  - name: RaspberyPis
+  - name: Systems
+
+paths:
+  /clusters:
+    get:
+      description: "Return list of all cluster objects"
+      summary: "GetAllclusters"
+      tags:
+        - Clusters
+      responses:
+        200:
+          $ref: "#/components/responses/ClustersResponse200"
+    post:
+      description: "Used to add new file"
+      summary: "AddCluster"
+      tags:
+        - Clusters
+      requestBody:
+        $ref: "#/components/requestBodies/ClusterAddBody"
+      responses:
+        201:
+          $ref: "#/components/responses/ObjectCreated201"
+        400:
+          $ref: "#/components/responses/CorruptedRequest400"
+    
+  /clusters/{id}:
+    get:
+      description: "Get specific Cluster"
+      summary: "GetCluster"
+      tags:
+        - Clusters
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: "Identification number in UUID4 format."
+      responses:
+        200:
+          $ref: "#/components/responses/ClusterResponse200"
+        404:
+          $ref: "#/components/responses/EntityNotFound404"
+
+components:
+  responses:
+    CorruptedRequest400:
+      description: "Incorrect request"
+      content:
+        application/json:
+          schema:
+            type: string
+            example: "Request body was incorrect"
+    
+    EntityNotFound404:
+      description: "Not found entity"
+      content:
+        application/json:
+          schema:
+            type: string
+            example: "Object couldn't be located."
+
+    ClustersResponse200:
+      description: "Response object of 200"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ClusterList"
+    
+    ClusterResponse200:
+      description: "Object of Cluster"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ClusterObject"
+
+    ObjectCreated201:
+      description: "Cluster has been added."
+      content:
+        application/yaml:
+          schema:
+            $ref: "#/components/schemas/ClusterObject"
+
+  requestBodies:
+    ClusterAddBody:
+      description: "Body of Cluster to add."
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Cluster"
+
+  schemas:
+    Cluster:
+      description: dsad
+      type: object
+      properties:
+        name:
+          type: string
+          example: "Johney"
+        something:
+          type: number
+          example: 141512
+
+    ClusterObject:
+      allOf:
+        - $ref: "#/components/schemas/Cluster"
+        - type: object
+          properties:
+            id:
+              type: string
+              example: "148-0fasjfa=r-15-ija;f"
+
+    ClusterList:
+      description: List of Cluster objects
+      type: array
+      items:
+        $ref: "#/components/schemas/ClusterObject"

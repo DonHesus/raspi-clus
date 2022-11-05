@@ -1,0 +1,14 @@
+version: "3.6"
+
+services:
+  db:
+    image: postgres
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+    volumes:
+      - raspi_clus:/var/lib/postgresql
+
+volumes:
+  raspi_clus:

@@ -9,6 +9,8 @@ services:
       - POSTGRES_PASSWORD=password
     volumes:
       - raspi_clus:/var/lib/postgresql
+    ports:
+      - "5432:5432"
 
 volumes:
   raspi_clus:

@@ -5,6 +5,9 @@ DHCP_SETUP_DST  := /etc/default/isc-dhcp-server
 TFTP_CONF_DST   := /etc/default/tftpd-hpa
 TFTP_SERVER_DST := $(SERVER_BOOT_FILE_LOCATION)/tftpboot
 
+venv:
+	echo "VENV"
+
 
 install:
 	@echo "Installer is starting"
@@ -21,7 +24,11 @@ install:
 	sudo sed -i 's/<tftp_location>/$(TFTP_SERVER_DST)/g' $(TFTP_CONF_DST)
 	sudo chown tftp:tftp $(TFTP_SERVER_DST)
 
+run-db:
+	echo "RUN DB"
+
 run:
 	flask run
 
-monitor:
+monitor: venv
+	$(VENV) -m src/entrypoints/health_monitor.py

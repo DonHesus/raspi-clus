@@ -1,0 +1,8 @@
+system_id: 4123dsa-4124ada-1312412-dasd2134
+system_name: Raspberry 1
+address: 192.168.50.11
+cluster:
+  cluster_id: 4123dsa-4124ada-1312412-dasd2134
+running_system:
+  system_id: 4123dsa-4124ada-1312412-dasd2134
+alive: true

@@ -1,0 +1,7 @@
+cluster_id: 4123dsa-4124ada-1312412-dasd2134
+cluster_name: Cluster 1
+raspberrys:
+  raspberry1:
+    #<info>
+  raspberry2:
+    #info

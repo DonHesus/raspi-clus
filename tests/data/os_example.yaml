@@ -1,0 +1,5 @@
+os_id: 4123dsa-4124ada-1312412-dasd2134
+name: Ubuntu_22.04
+img_path: /mnt/cluster/images/img/gold/ubuntu22_04_x64
+boot_path: /mnt/cluster/images/boot/gold/ubuntu22_04_x64
+status: fresh

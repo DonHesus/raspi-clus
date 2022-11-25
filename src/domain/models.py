@@ -36,7 +36,8 @@ class RaspberryPi:
 
     operating_system: OperatingSystem = None
 
-    def __init__(self, name, address: ip_address, operating_system: OperatingSystem = None, cluster: Cluster = None):
+    def __init__(self, name, address: ip_address, operating_system: OperatingSystem = None, cluster: Cluster = None,
+                 raspberry_id: uuid.UUID = None):
         self.name = name
         self.address = address
         self.operating_system = operating_system if not None else self.operating_system

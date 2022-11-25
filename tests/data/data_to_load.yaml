@@ -1,0 +1,17 @@
+cluster:
+  name: "TestDatacluster"
+  cluster_id: "random number"
+  network: "192.168.50:1/24"
+  raspberry_pis:
+    - name: "Raspberry_1"
+      address: "192.168.50.11"
+      raspberry_id: "random number_1"
+      operating_system:
+        name: "Golden_Ubuntu"
+        path: "C:/dasdsad/asdas12"
+    - name: "Raspberry_2"
+      address: "192.168.50.12"
+      raspberry_id: "random number_2"
+      operating_system:
+        name: "Golden_Ubuntu"
+        path: "C:/dasdsad/asdas12"

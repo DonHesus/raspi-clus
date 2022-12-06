@@ -25,7 +25,12 @@ install:
 	sudo chown tftp:tftp $(TFTP_SERVER_DST)
 
 run-db:
-	echo "RUN DB"
+	echo "Running DB"
+	docker compose up -d
+
+stop-db:
+	echo "Stopping DB"
+	docker compose down
 
 run:
 	flask run

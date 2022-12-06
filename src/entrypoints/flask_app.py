@@ -1,8 +1,11 @@
-import logging
 from flask import Flask
+from sqlalchemy.orm import sessionmaker
 
 import settings
 from src.adapters.data.models import db
+from settings import Settings
+
+session_factory = sessionmaker(bind=Settings.database_engine)
 
 
 def create_app():
@@ -20,4 +23,4 @@ def create_app():
 
 
 if __name__ == '__main__':
-    create_app()
+    create_app().run()

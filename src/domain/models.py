@@ -4,9 +4,10 @@ from typing import List
 
 
 class OperatingSystem:
-    def __init__(self, name, path):
+    def __init__(self, name, path, os_id: uuid.UUID = None):
         self.name = name
         self.path = path
+        self.os_id = os_id
 
     def serialize(self):
         pass
@@ -25,7 +26,7 @@ class Cluster:
         self.network = network
         self.raspberry_pis = raspberry_pis if not None else self.raspberry_pis
 
-    def change_os(self, operating_system: OperatingSystem, raspberry_pi: 'RaspberryPi'):
+    def change_os(self, operating_system: OperatingSystem):
         raise NotImplementedError()
 
     def serialize(self):
@@ -42,6 +43,7 @@ class RaspberryPi:
         self.address = address
         self.operating_system = operating_system if not None else self.operating_system
         self.cluster = cluster
+        self.raspberry_id = raspberry_id
 
     def change_os(self, operating_system: OperatingSystem):
         raise NotImplementedError()

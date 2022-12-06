@@ -1,6 +1,8 @@
 import os
 from dataclasses import dataclass
 
+from sqlalchemy import create_engine
+
 
 @dataclass
 class Settings:
@@ -13,3 +15,4 @@ class Settings:
     db_port = os.environ.get('DB_PORT') or 5432
 
     database_url = f"{db_engine}://{db_user}:{db_password}@{db_uri}:{db_port}/{db_name}"
+    database_engine = create_engine(database_url)

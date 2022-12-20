@@ -16,6 +16,10 @@ class ClusterRepository(ABC):
         pass
 
     @abstractmethod
+    def get_by_name(self, cluster_name):
+        pass
+
+    @abstractmethod
     def add_cluster(self, cluster: Cluster):
         pass
 
@@ -82,7 +86,7 @@ class UnitOfWork(ABC):
 
     @property
     @abstractmethod
-    def clusters(self):
+    def clusters(self) -> ClusterRepository:
         pass
 
     @property

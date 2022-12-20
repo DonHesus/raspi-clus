@@ -11,6 +11,6 @@ def start():
     args = parser.parse_args()
 
     loader = ConfigLoader()
-    objects = loader.load_from_yaml(args.config)
+    objects = loader.load_from_yaml_file(args.config)
     print(objects)
 

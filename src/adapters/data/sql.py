@@ -21,6 +21,9 @@ class SQLClusterRepository(ClusterRepository):
     def get_by_id(self, cluster_id: UUID):
         pass
 
+    def get_by_name(self, cluster_name):
+        pass
+
     def add_cluster(self, cluster: Cluster):
         cluster_to_add = DBCluster(id=cluster.cluster_id, name=cluster.name, network=cluster.network)
         self._session.add(cluster_to_add)

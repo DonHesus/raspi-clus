@@ -14,6 +14,7 @@ paths:
     get:
       description: "Return list of all cluster objects"
       summary: "GetAllclusters"
+      operationId: src.adapters.rest_api.clusters.get_clusters
       tags:
         - Clusters
       responses:
@@ -22,13 +23,14 @@ paths:
     post:
       description: "Used to add new file"
       summary: "AddCluster"
+      operationId: src.adapters.rest_api.clusters.add_cluster
       tags:
         - Clusters
       requestBody:
         $ref: "#/components/requestBodies/ClusterAddBody"
       responses:
         201:
-          $ref: "#/components/responses/ObjectCreated201"
+          $ref: "#/components/responses/ClusterObjectCreated201"
         400:
           $ref: "#/components/responses/CorruptedRequest400"
     
@@ -36,6 +38,7 @@ paths:
     get:
       description: "Get specific Cluster"
       summary: "GetCluster"
+      operationId: src.adapters.rest_api.clusters.get_cluster
       tags:
         - Clusters
       parameters:
@@ -48,6 +51,95 @@ paths:
       responses:
         200:
           $ref: "#/components/responses/ClusterResponse200"
+        404:
+          $ref: "#/components/responses/EntityNotFound404"
+
+  /raspberries:
+    get:
+      description: "Returns list of all Raspberries objects"
+      summary: "GetAllRaspberries"
+      operationId: src.adapters.rest_api.raspberry_pis.get_raspberries
+      tags:
+        - RaspberyPis
+      responses:
+        200:
+          $ref: "#/components/responses/RaspberriesResponse200"
+    post:
+      description: "Allows to add a Raspberry Pi"
+      summary: "AddRaspberryPi"
+      operationId: src.adapters.rest_api.raspberry_pis.add_raspberry_pi
+      tags:
+        - RaspberyPis
+      requestBody:
+        $ref: "#/components/requestBodies/RaspberryPiAddBody"
+      responses:
+        201:
+          $ref: "#/components/responses/RaspberryPiObjectCreated201"
+        400:
+          $ref: "#/components/responses/CorruptedRequest400"
+
+  /raspberries/{id}:
+    get:
+      description: "Return single Raspberry Pi"
+      summary: "GetRaspberryPi"
+      operationId: src.adapters.rest_api.raspberry_pis.get_single_raspberry
+      tags:
+        - RaspberryPis
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: "Identification number in UUID4 format."
+      responses:
+        200:
+          $ref: "#/components/responses/RaspberryPiResponse200"
+        404:
+          $ref: "#/components/responses/EntityNotFound404"
+
+
+  /operating_systems:
+    get:
+      description: "Returns list of all Operating Systems objects"
+      summary: "GetAllOSes"
+      operationId: src.adapters.rest_api.operating_systems.get_operating_systems
+      tags:
+        - Systems
+      responses:
+        200:
+          $ref: "#/components/responses/OperatingSystemsResponse200"
+    post:
+      description: "Allows to add Operating System"
+      summary: "AddRaspberryPi"
+      operationId: src.adapters.rest_api.operating_systems.add_operating_system
+      tags:
+        - Systems
+      requestBody:
+        $ref: "#/components/requestBodies/OSAddBody"
+      responses:
+        201:
+          $ref: "#/components/responses/OperatingSystemObjectCreated201"
+        400:
+          $ref: "#/components/responses/CorruptedRequest400"
+
+  /operating_systems/{id}:
+    get:
+      description: "Return single Operating System information"
+      summary: "GetOperatingSystem"
+      operationId: src.adapters.rest_api.operating_systems.get_single_os
+      tags:
+        - Systems
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: "Identification number in UUID4 format."
+      responses:
+        200:
+          $ref: "#/components/responses/OperatingSystemResponse200"
         404:
           $ref: "#/components/responses/EntityNotFound404"
 
@@ -83,12 +175,54 @@ components:
           schema:
             $ref: "#/components/schemas/ClusterObject"
 
-    ObjectCreated201:
+    ClusterObjectCreated201:
       description: "Cluster has been added."
       content:
         application/yaml:
           schema:
             $ref: "#/components/schemas/ClusterObject"
+
+    RaspberriesResponse200:
+      description: "Response for Raspberries list"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/RaspberryPisList"
+
+    RaspberryPiResponse200:
+      description: "Response with Raspberry Pi"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/RaspberryPiObject"
+
+    RaspberryPiObjectCreated201:
+      description: "Response to successful RaspberryPi creation"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/RaspberryPiObject"
+
+    OperatingSystemsResponse200:
+      description: "Response to getting the list of RaspberryPis"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/OperatingSystemsList"
+
+    OperatingSystemObjectCreated201:
+      description: "Informs that adding new OS has been successful"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/OperatingSystemObject"
+
+    OperatingSystemResponse200:
+      description: "Response to request for a single Operating System"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/OperatingSystemObject"
 
   requestBodies:
     ClusterAddBody:
@@ -98,9 +232,23 @@ components:
           schema:
             $ref: "#/components/schemas/Cluster"
 
+    RaspberryPiAddBody:
+      description: "Body of a Raspberry Pi"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/RaspberryPi"
+
+    OSAddBody:
+      description: "Description for a body of Oparating System"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/OperatingSystem"
+
   schemas:
     Cluster:
-      description: dsad
+      description: Representation of Cluster
       type: object
       properties:
         name:
@@ -111,6 +259,7 @@ components:
           example: 141512
 
     ClusterObject:
+      description: Representation of Cluster stored in the system
       allOf:
         - $ref: "#/components/schemas/Cluster"
         - type: object
@@ -124,3 +273,58 @@ components:
       type: array
       items:
         $ref: "#/components/schemas/ClusterObject"
+
+    RaspberryPi:
+      description: Represents object of RaspberryPi
+      type: object
+      properties:
+        name:
+          type: string
+          example: "Raspberry_1"
+        address:
+          type: string
+          example: "192.168.50.11"
+        operating_system:
+          $ref: "#/components/schemas/OperatingSystem"
+
+    RaspberryPiObject:
+      description: Represents RaspberryPi object stored in system
+      allOf:
+        - $ref: "#/components/schemas/RaspberryPi"
+        - type: object
+          properties:
+            id:
+              type: string
+              example: "148-0fasjfa=r-15-ija;f"
+
+    RaspberryPisList:
+      description: Represents list of RaspberryPi objects
+      type: array
+      items:
+        $ref: "#/components/schemas/RaspberryPiObject"
+
+    OperatingSystem:
+      description: Representation of Operating System
+      type: object
+      properties:
+        name:
+          type: string
+          example: "Ubuntu 22.04"
+        path:
+          type: string
+          example: "/mnt/os_images/ubuntu_22_04"
+
+    OperatingSystemObject:
+      description: Represents Operating System object stored in the system
+      allOf:
+        - $ref: "#/components/schemas/OperatingSystem"
+        - type: object
+          properties:
+            id:
+              type: string
+
+    OperatingSystemsList:
+      description: Represents list of Operating Systems objects
+      type: array
+      items:
+        $ref: "#/components/schemas/OperatingSystem"

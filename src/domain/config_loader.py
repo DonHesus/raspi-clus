@@ -7,15 +7,15 @@ class ConfigLoader:
     def __init__(self):
         pass
 
-    def load_from_yaml(self, config_path):
+    def load_from_yaml_file(self, config_path):
         with open(config_path, "rb") as config_file:
             content = yaml.safe_load(config_file)
-        return self._translate_config(content)
+        return self.translate_config(content)
 
     def parse_to_yaml(self):
         pass
 
-    def _translate_config(self, content: dict):
+    def translate_config(self, content: dict):
         if content.get("cluster"):
             if content["cluster"].get("raspberry_pis"):
                 raspberries = content["cluster"].pop('raspberry_pis')

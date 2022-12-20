@@ -10,5 +10,5 @@ def test_obj():
 
 
 def test_config_loads(test_obj):
-    objects = test_obj.load_from_yaml("/home/grzeslav/Learning/Studia/Praca Magisterska/Implementacja/raspi-clus/tests/data/data_to_load.yaml")
+    objects = test_obj.load_from_yaml_file("/home/grzeslav/Learning/Studia/Praca Magisterska/Implementacja/raspi-clus/tests/data/data_to_load.yaml")
     assert objects

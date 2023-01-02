@@ -14,5 +14,5 @@ class Settings:
     db_uri = os.environ.get('DB_URI') or "localhost"
     db_port = os.environ.get('DB_PORT') or 5432
 
-    database_url = f"{db_engine}://{db_user}:{db_password}@{db_uri}:{db_port}/{db_name}"
-    database_engine = create_engine(database_url)
+    database_url = f"postgresql+psycopg2://{db_user}:{db_password}@{db_uri}:{db_port}/{db_name}"
+    database_engine = create_engine(database_url, echo=True)

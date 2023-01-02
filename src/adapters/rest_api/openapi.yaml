@@ -6,8 +6,9 @@ info:
 
 tags:
   - name: Clusters
-  - name: RaspberyPis
+  - name: RaspberryPis
   - name: Systems
+  - name: Administration
 
 paths:
   /clusters:
@@ -60,7 +61,7 @@ paths:
       summary: "GetAllRaspberries"
       operationId: src.adapters.rest_api.raspberry_pis.get_raspberries
       tags:
-        - RaspberyPis
+        - RaspberryPis
       responses:
         200:
           $ref: "#/components/responses/RaspberriesResponse200"
@@ -69,7 +70,7 @@ paths:
       summary: "AddRaspberryPi"
       operationId: src.adapters.rest_api.raspberry_pis.add_raspberry_pi
       tags:
-        - RaspberyPis
+        - RaspberryPis
       requestBody:
         $ref: "#/components/requestBodies/RaspberryPiAddBody"
       responses:
@@ -98,6 +99,26 @@ paths:
         404:
           $ref: "#/components/responses/EntityNotFound404"
 
+    post:
+      description: "Allows to change Operating System on given Raspberry system"
+      summary: "ChangeRaspberryOS"
+      operationId: src.adapters.rest_api.raspberry_pis.change_os
+      tags:
+        - RaspberryPis
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: "Identification number of RaspberryID"
+      requestBody:
+        $ref: "#/components/requestBodies/ChangeOSBody"
+      responses:
+        204:
+          $ref: "#/components/responses/SystemChangedResponse204"
+        404:
+          $ref: "#/components/responses/EntityNotFound404"
 
   /operating_systems:
     get:
@@ -111,7 +132,7 @@ paths:
           $ref: "#/components/responses/OperatingSystemsResponse200"
     post:
       description: "Allows to add Operating System"
-      summary: "AddRaspberryPi"
+      summary: "AddOperatingSystem"
       operationId: src.adapters.rest_api.operating_systems.add_operating_system
       tags:
         - Systems
@@ -139,6 +160,26 @@ paths:
           description: "Identification number in UUID4 format."
       responses:
         200:
+          $ref: "#/components/responses/OperatingSystemResponse200"
+        404:
+          $ref: "#/components/responses/EntityNotFound404"
+
+  /health/{raspberry_id}:
+    post:
+      description: "Updates Raspberry Pi with information if it's alive"
+      summary: "UpdateRaspberryPiAliveStatus"
+      operationId: src.adapters.rest_api.health.health_status
+      tags:
+        - Administration
+      parameters:
+        - in: path
+          name: raspberry_id
+          schema:
+            type: string
+          required: true
+          description: "Identification number of RaspberryPi"
+      responses:
+        204:
           $ref: "#/components/responses/OperatingSystemResponse200"
         404:
           $ref: "#/components/responses/EntityNotFound404"
@@ -203,6 +244,9 @@ components:
           schema:
             $ref: "#/components/schemas/RaspberryPiObject"
 
+    SystemChangedResponse204:
+      description: "Response to successful OS changed"
+
     OperatingSystemsResponse200:
       description: "Response to getting the list of RaspberryPis"
       content:
@@ -239,6 +283,16 @@ components:
           schema:
             $ref: "#/components/schemas/RaspberryPi"
 
+    ChangeOSBody:
+      description: "Body of changing OS for Raspberry"
+      content:
+        application/json:
+          schema:
+            properties:
+              os_id:
+                type: string
+                example: "11212-adasr12-1241rfa-12412"
+
     OSAddBody:
       description: "Description for a body of Oparating System"
       content:
@@ -254,9 +308,9 @@ components:
         name:
           type: string
           example: "Johney"
-        something:
-          type: number
-          example: 141512
+        network:
+          type: string
+          example: "192.168.50.11/32"
 
     ClusterObject:
       description: Representation of Cluster stored in the system
@@ -266,7 +320,15 @@ components:
           properties:
             id:
               type: string
-              example: "148-0fasjfa=r-15-ija;f"
+              example: "1c43edb8-75ec-47bc-92eb-b3f6b1c399ef"
+            raspberry_pis:
+              type: array
+              items:
+                type: string
+                example:
+                  - "1c43edb8-75ec-47bc-92eb-b3f6b1c399ef"
+                  - "1c43edb8-753c-47bc-92eb-b3f6b1c399ef"
+
 
     ClusterList:
       description: List of Cluster objects
@@ -284,8 +346,9 @@ components:
         address:
           type: string
           example: "192.168.50.11"
-        operating_system:
-          $ref: "#/components/schemas/OperatingSystem"
+        operating_system_id:
+          type: string
+          example: "148-0fasjfa=r-15-ija;f"
 
     RaspberryPiObject:
       description: Represents RaspberryPi object stored in system

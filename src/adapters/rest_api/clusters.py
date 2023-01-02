@@ -18,8 +18,8 @@ def add_cluster(body: dict):
     handler.handle(body)
     return "Success", 201
 
-def get_cluster(cluster_id: int):
+def get_cluster(id: int):
     db_manager = SQLUnitOfWorkManager(session_factory)
     handler = GetSingleClusterHandler(db_manager)
-    cluster = handler.handle(cluster_id)
+    cluster = handler.handle(id)
     return cluster, 200

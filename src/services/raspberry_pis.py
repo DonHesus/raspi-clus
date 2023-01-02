@@ -1,4 +1,7 @@
-from src.domain.config_loader import ConfigLoader
+import uuid
+
+from domain.models import RaspberryPi, OperatingSystem
+
 from src.services import Handler
 
 
@@ -8,20 +11,27 @@ class GetAllRaspberries(Handler):
         with self.manager.start() as uow:
             raspberries = uow.raspberry_pis.get_all()
 
-        return raspberries
+        raspberries_list = [raspberry.as_dict() for raspberry in raspberries]
+        return raspberries_list
 
 class AddRaspberryPiHandler(Handler):
 
     def handle(self, body):
-        config_loader = ConfigLoader()
-        objects = config_loader.translate_config(body)
+        body["raspberry_id"] = uuid.uuid4()
         with self.manager.start() as uow:
-            uow.raspberry_pis.add_raspberry_pi(objects)
+            uow.raspberry_pis.add_raspberry_pi(RaspberryPi(**body))
 
 
 class GetSingleRaspberryPiHandler(Handler):
     def handle(self, raspberry_id = None):
-        with self.manager as uow:
+        with self.manager.start() as uow:
             raspberry = uow.raspberry_pis.get_by_id(raspberry_id)
 
-        return raspberry
+        return raspberry.as_dict()
+
+class ChangeOSHandler(Handler):
+    def handle(self, raspberry_id, os_id):
+        with self.manager.start() as uow:
+            raspberry_obj = uow.raspberry_pis.get_by_id(raspberry_id)
+            RaspberryPi(raspberry_obj.name, raspberry_obj.address, raspberry_id.operating_system_id).change_os()
+            uow.raspberry_pis.update_raspberry_system(raspberry_id, os_id)

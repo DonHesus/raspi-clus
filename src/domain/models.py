@@ -35,18 +35,20 @@ class Cluster:
 
 class RaspberryPi:
 
-    operating_system: OperatingSystem = None
+    operating_system_id: OperatingSystem = None
+    raspberry_id: uuid.UUID = None
+    alive : bool = None
 
-    def __init__(self, name, address: ip_address, operating_system: OperatingSystem = None, cluster: Cluster = None,
+    def __init__(self, name, address: ip_address, operating_system_id: OperatingSystem = None, cluster_id: uuid.UUID = None,
                  raspberry_id: uuid.UUID = None):
         self.name = name
         self.address = address
-        self.operating_system = operating_system if not None else self.operating_system
-        self.cluster = cluster
-        self.raspberry_id = raspberry_id
+        self.operating_system_id = operating_system_id if not None else self.operating_system_id
+        self.cluster_id = cluster_id
+        self.raspberry_id = raspberry_id if not None else self.raspberry_id
 
-    def change_os(self, operating_system: OperatingSystem):
-        raise NotImplementedError()
+    def change_os(self, os_obj: OperatingSystem):
+        print("Changing OS")
 
     def serialize(self):
         pass

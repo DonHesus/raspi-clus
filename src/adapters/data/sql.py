@@ -1,3 +1,4 @@
+import datetime
 from typing import List
 from uuid import UUID
 
@@ -19,7 +20,8 @@ class SQLClusterRepository(ClusterRepository):
         return DBCluster.query.all()
 
     def get_by_id(self, cluster_id: UUID):
-        pass
+        cluster = DBCluster.query.get({"id" : cluster_id})
+        return cluster
 
     def get_by_name(self, cluster_name):
         pass
@@ -41,14 +43,23 @@ class SQLRaspberryPiRepository(RaspberryPiRepository):
         return DBRaspberryPi.query.all()
 
     def add_raspberry_pi(self, raspberry: RaspberryPi):
-        raspberry_to_add = DBRaspberryPi(id=raspberry.raspberry_id, name=raspberry.name, address=raspberry.address)
+        raspberry_to_add = DBRaspberryPi(id=raspberry.raspberry_id, name=raspberry.name, address=raspberry.address,
+                                         cluster_id = raspberry.cluster_id)
         self._session.add(raspberry_to_add)
 
     def get_by_id(self, raspberry_id: UUID) -> RaspberryPi:
-        pass
+        return self._session.query(DBRaspberryPi).get({"id": raspberry_id})
 
     def update_raspberry(self, raspberry: RaspberryPi):
         pass
+
+    def update_raspberry_system(self, raspberry_id, os_id):
+        raspberry_obj = self._session.query(DBRaspberryPi).get({"id": raspberry_id})
+        raspberry_obj.operating_system_id = os_id
+
+    def update_last_alive(self, raspberry_id, date):
+        raspberry_obj = self._session.query(DBRaspberryPi).get({"id": raspberry_id})
+        raspberry_obj.last_alive = date
 
 
 class SQLOperatingSystemRepository(OperatingSystemRepository):
@@ -60,10 +71,10 @@ class SQLOperatingSystemRepository(OperatingSystemRepository):
         return DBOperatingSystem.query.all()
 
     def get_by_id(self, os_id: UUID) -> OperatingSystem:
-        pass
+        return DBOperatingSystem.query.get({"id": os_id})
 
     def add_operating_system(self, operating_system: OperatingSystem):
-        os_to_add = DBOperatingSystem(operating_system.os_id, operating_system.name, operating_system.path)
+        os_to_add = DBOperatingSystem(id = operating_system.os_id, name=operating_system.name, path=operating_system.path)
         self._session.add(os_to_add)
 
     def update_operating_system(self, operating_system: OperatingSystem):
@@ -76,7 +87,7 @@ class SQLUnitOfWorkManager(UnitOfWorkManager):
         self.session_factory = session_factory
 
     def start(self) -> UnitOfWork:
-        return SQLUnitOfWork(session=self.session_factory())
+        return SQLUnitOfWork(session=self.session_factory)
 
 
 class SQLUnitOfWork(UnitOfWork):
@@ -85,6 +96,7 @@ class SQLUnitOfWork(UnitOfWork):
         self._session = session
 
     def __enter__(self):
+        self._session = self._session()
         return self
 
     def __exit__(self, ex_type, value, traceback):
@@ -95,6 +107,7 @@ class SQLUnitOfWork(UnitOfWork):
 
     def commit(self):
         self._session.commit()
+        self._session.close()
 
     def rollback(self):
         self._session.rollback()

@@ -12,10 +12,10 @@ def get_operating_systems():
     oses = handler.handle()
     return oses, 200
 
-def get_single_os(os_id):
+def get_single_os(id: int):
     db_manager = SQLUnitOfWorkManager(session_factory)
     handler = GetSingleOperatingSystemHandler(db_manager)
-    operating_system = handler.handle(os_id)
+    operating_system = handler.handle(id)
     return operating_system, 200
 
 def add_operating_system(body):

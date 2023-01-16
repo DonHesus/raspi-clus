@@ -1,5 +1,8 @@
 include .env
 
+VENV 			:= venv
+PYTHON 			:= $(VENV)/bin/python
+
 DHCP_CONF_DST   := /etc/dhcp/dhcpd.conf
 DHCP_SETUP_DST  := /etc/default/isc-dhcp-server
 TFTP_CONF_DST   := /etc/default/tftpd-hpa
@@ -35,7 +38,7 @@ stop-db:
 	docker compose down
 
 run:
-	$(VENV) src/entrypoints/flask_app.py
+	PYTHONPATH=${PYTHONPATH}:"$(shell pwd)/src" $(PYTHON) src/entrypoints/flask_app.py
 
 monitor: venv
 	$(VENV) -m src/entrypoints/health_monitor.py

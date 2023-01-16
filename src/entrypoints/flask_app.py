@@ -1,9 +1,8 @@
-import os
 import pathlib
-
 import connexion
 from sqlalchemy.orm import sessionmaker
 from src.adapters.data.models import db
+
 from settings import Settings
 
 

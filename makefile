@@ -7,12 +7,14 @@ DHCP_CONF_DST   := /etc/dhcp/dhcpd.conf
 DHCP_SETUP_DST  := /etc/default/isc-dhcp-server
 TFTP_CONF_DST   := /etc/default/tftpd-hpa
 TFTP_SERVER_DST := $(SERVER_BOOT_FILE_LOCATION)/tftpboot
+VENV            := venv/bin/python
 
-venv:
-	echo "VENV"
+install-venv:
+	python3 -m venv venv
+	$(VENV) -m pip install -r requirements.txt
 
 
-install:
+install: install-venv
 	@echo "Installer is starting"
 	sudo apt install isc-dhcp-server -y
 	sudo apt install nfs-kernel-server -y

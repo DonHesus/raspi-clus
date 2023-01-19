@@ -1,5 +1,6 @@
 import os
 from dataclasses import dataclass
+from pathlib import Path
 
 from sqlalchemy import create_engine
 
@@ -16,3 +17,8 @@ class Settings:
 
     database_url = f"postgresql+psycopg2://{db_user}:{db_password}@{db_uri}:{db_port}/{db_name}"
     database_engine = create_engine(database_url, echo=True)
+
+    dhcp_configuration_file = Path(os.environ.get('DHCPD_CONF_FILE'))
+    server_address = Path(os.environ.get("SERVER_ADDRESS"))
+    boot_location = Path(os.environ.get("SERVER_BOOT_FILE_LOCATION"))
+

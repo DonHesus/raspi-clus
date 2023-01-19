@@ -44,11 +44,14 @@ class SQLRaspberryPiRepository(RaspberryPiRepository):
 
     def add_raspberry_pi(self, raspberry: RaspberryPi):
         raspberry_to_add = DBRaspberryPi(id=raspberry.raspberry_id, name=raspberry.name, address=raspberry.address,
-                                         cluster_id = raspberry.cluster_id)
+                                         cluster_id=raspberry.cluster_id, mac_address=raspberry.mac_address)
         self._session.add(raspberry_to_add)
 
     def get_by_id(self, raspberry_id: UUID) -> RaspberryPi:
         return self._session.query(DBRaspberryPi).get({"id": raspberry_id})
+
+    def get_by_mac_address(self, mac_address: str) -> RaspberryPi:
+        return self._session.query(DBRaspberryPi).get({"mac_address": mac_address})
 
     def update_raspberry(self, raspberry: RaspberryPi):
         pass

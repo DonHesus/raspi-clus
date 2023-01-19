@@ -1,6 +1,8 @@
 import uuid
 
-from domain.models import RaspberryPi, OperatingSystem
+from domain.models import RaspberryPi
+from services.configs_manipulation import add_new_node
+from settings import Settings
 
 from src.services import Handler
 
@@ -14,20 +16,23 @@ class GetAllRaspberries(Handler):
         raspberries_list = [raspberry.as_dict() for raspberry in raspberries]
         return raspberries_list
 
+
 class AddRaspberryPiHandler(Handler):
 
     def handle(self, body):
         body["raspberry_id"] = uuid.uuid4()
         with self.manager.start() as uow:
             uow.raspberry_pis.add_raspberry_pi(RaspberryPi(**body))
+            add_new_node(body, Settings.dhcp_configuration_file, Settings.server_address, Settings.boot_location)
 
 
 class GetSingleRaspberryPiHandler(Handler):
-    def handle(self, raspberry_id = None):
+    def handle(self, mac_address=None):
         with self.manager.start() as uow:
-            raspberry = uow.raspberry_pis.get_by_id(raspberry_id)
+            raspberry = uow.raspberry_pis.get_by_mac_address(mac_address)
 
         return raspberry.as_dict()
+
 
 class ChangeOSHandler(Handler):
     def handle(self, raspberry_id, os_id):

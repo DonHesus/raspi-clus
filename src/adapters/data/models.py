@@ -48,6 +48,7 @@ class RaspberryPi(db.Model):
     id = Column(UUIDType, primary_key=True, nullable=False, default=uuid.uuid4)
     name = Column(String(255), nullable=False)
     address = Column(String, nullable=False)
+    mac_address = Column(String, nullable=False)
     operating_system_id = Column(UUIDType, ForeignKey("operating_systems.id"))
     cluster_id = Column(UUIDType, ForeignKey('clusters.id'))
     last_alive = Column(Date, nullable=True)
@@ -56,6 +57,7 @@ class RaspberryPi(db.Model):
         return {"id": self.id,
                 "name": self.name,
                 "address": self.address,
+                "mac_address": self.mac_address,
                 "last_alive": str(self.last_alive),
                 "operating_system_id": self.operating_system_id,
                 "cluster_id": self.cluster_id}

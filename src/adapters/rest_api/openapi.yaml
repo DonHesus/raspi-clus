@@ -79,7 +79,7 @@ paths:
         400:
           $ref: "#/components/responses/CorruptedRequest400"
 
-  /raspberries/{id}:
+  /raspberries/{mac_address}:
     get:
       description: "Return single Raspberry Pi"
       summary: "GetRaspberryPi"
@@ -88,11 +88,11 @@ paths:
         - RaspberryPis
       parameters:
         - in: path
-          name: id
+          name: mac_address
           schema:
             type: string
           required: true
-          description: "Identification number in UUID4 format."
+          description: "Mac Address of RaspberryPi ethernet adapter"
       responses:
         200:
           $ref: "#/components/responses/RaspberryPiResponse200"
@@ -349,6 +349,9 @@ components:
         operating_system_id:
           type: string
           example: "148-0fasjfa=r-15-ija;f"
+        mac_address:
+          type: string
+          example: "8A4f1b23c454"
 
     RaspberryPiObject:
       description: Represents RaspberryPi object stored in system

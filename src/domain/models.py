@@ -39,13 +39,14 @@ class RaspberryPi:
     raspberry_id: uuid.UUID = None
     alive : bool = None
 
-    def __init__(self, name, address: ip_address, operating_system_id: OperatingSystem = None, cluster_id: uuid.UUID = None,
+    def __init__(self, name, address: ip_address, mac_address: str,  operating_system_id: OperatingSystem = None, cluster_id: uuid.UUID = None,
                  raspberry_id: uuid.UUID = None):
         self.name = name
         self.address = address
         self.operating_system_id = operating_system_id if not None else self.operating_system_id
         self.cluster_id = cluster_id
         self.raspberry_id = raspberry_id if not None else self.raspberry_id
+        self.mac_address = mac_address
 
     def change_os(self, os_obj: OperatingSystem):
         print("Changing OS")

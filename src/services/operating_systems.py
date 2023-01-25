@@ -1,6 +1,9 @@
 import uuid
+from pathlib import Path
 
 from domain.models import OperatingSystem
+from services.image_manipulation import add_new_golden_image
+from settings import Settings
 from src.services import Handler
 
 
@@ -16,10 +19,12 @@ class GetAllOperatingSystems(Handler):
 
 class AddOperatingSystemHandler(Handler):
 
-    def handle(self, body):
-        body["os_id"] = uuid.uuid4()
+    def handle(self, name, system_src, boot_src):
+        os_id = uuid.uuid4()
+        golden_image_path = Path(Settings.image_store) / "golden_images" / f"{os_id}"
         with self.manager.start() as uow:
-            system_os = OperatingSystem(**body)
+            system_os = OperatingSystem(name=name, path=golden_image_path, os_id=os_id, os_type="golden")
+            add_new_golden_image(system_files_path=system_src, boot_dir_path=boot_src)
             uow.operating_systems.add_operating_system(system_os)
 
 

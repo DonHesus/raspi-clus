@@ -20,5 +20,7 @@ class Settings:
 
     dhcp_configuration_file = Path(os.environ.get('DHCPD_CONF_FILE'))
     server_address = Path(os.environ.get("SERVER_ADDRESS"))
-    boot_location = Path(os.environ.get("SERVER_BOOT_FILE_LOCATION"))
+    image_store = Path(os.environ.get("IMAGE_STORE"))
+    boot_location = Path(os.environ.get("TFTP_SERVER_DST"))
+    nfs_directory = Path(os.environ.get("NFS_SERVING_DIR"))
 

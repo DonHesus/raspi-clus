@@ -2,7 +2,6 @@ import uuid
 
 from domain.models import RaspberryPi
 from services.configs_manipulation import add_new_node
-from settings import Settings
 
 from src.services import Handler
 
@@ -23,7 +22,7 @@ class AddRaspberryPiHandler(Handler):
         body["raspberry_id"] = uuid.uuid4()
         with self.manager.start() as uow:
             uow.raspberry_pis.add_raspberry_pi(RaspberryPi(**body))
-            add_new_node(body, Settings.dhcp_configuration_file, Settings.server_address, Settings.boot_location)
+            add_new_node(body)
 
 
 class GetSingleRaspberryPiHandler(Handler):

@@ -1,9 +1,14 @@
 import subprocess
 from pathlib import Path
 
+from settings import Settings
+
 
 def create_new_distributed_image(golden_image_path, new_image_id):
-    pass
+    cp_proc = subprocess.Popen(f"cp -ax {golden_image_path} {Settings.image_store}/{new_image_id}",
+                               stdout=subprocess.PIPE, shell=True)
+    cp_proc.communicate()
+    return f"{Settings.image_store}/{new_image_id}"
 
 
 def add_new_golden_image(system_files_path: Path, boot_dir_path: Path):

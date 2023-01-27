@@ -1,9 +1,8 @@
 import uuid
-import subprocess
 from ipaddress import ip_address
 from typing import List
 
-from services.configs_manipulation import change_fstab_entry
+from services.configs_manipulation import edit_fstab_conf
 from services.image_manipulation import create_new_distributed_image
 
 
@@ -12,7 +11,7 @@ class OperatingSystem:
         self.name = name
         self.path = path
         self.os_id = os_id
-        self.os_type = type
+        self.os_type = os_type
 
     def serialize(self):
         pass
@@ -54,20 +53,21 @@ class RaspberryPi:
         self.mac_address = mac_address
         self.serial_number = serial_number
 
-    def change_os(self, os_obj: OperatingSystem, new_os_obj: OperatingSystem):
+    def change_os(self, image_to_distribute: OperatingSystem, new_image_id: uuid.UUID) -> OperatingSystem:
         """
         """
-        create_new_distributed_image()
-        change_fstab_entry()
-        self.reboot()
-
-
+        if image_to_distribute.os_type == "golden":
+            new_image_path = create_new_distributed_image(image_to_distribute.path, new_image_id=new_image_id)
+        edit_fstab_conf()
+        self._reboot()
+        return OperatingSystem(name=image_to_distribute.name, os_type="distributed", os_id=new_image_id,
+                               path=new_image_path)
 
     def refresh_os(self):
         pass
 
-    def reboot(self):
-        pass
+    def _reboot(self):
+        print("Executing reboot on machine")
 
     def serialize(self):
         pass

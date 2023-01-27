@@ -1,6 +1,6 @@
 import uuid
 
-from domain.models import RaspberryPi
+from domain.models import RaspberryPi, OperatingSystem
 from services.configs_manipulation import add_new_node
 
 from src.services import Handler
@@ -34,8 +34,12 @@ class GetSingleRaspberryPiHandler(Handler):
 
 
 class ChangeOSHandler(Handler):
-    def handle(self, raspberry_id, os_id):
+    def handle(self, mac_address, os_id):
         with self.manager.start() as uow:
-            raspberry_obj = uow.raspberry_pis.get_by_id(raspberry_id)
-            RaspberryPi(raspberry_obj.name, raspberry_obj.address, raspberry_id.operating_system_id).change_os()
-            uow.raspberry_pis.update_raspberry_system(raspberry_id, os_id)
+            raspberry_obj = uow.raspberry_pis.get_by_mac_address(mac_address)
+            image_to_distribute = uow.operating_systems.get_by_id(raspberry_obj.operating_system_id)
+            new_image_id = uuid.uuid4()
+            new_system = RaspberryPi(**raspberry_obj.to_dict())\
+                .change_os(image_to_distribute=OperatingSystem(**image_to_distribute.to_dict()), new_image_id=new_image_id)
+            uow.operating_systems.add_operating_system(new_system)
+            uow.raspberry_pis.update_raspberry_system(mac_address, os_id)

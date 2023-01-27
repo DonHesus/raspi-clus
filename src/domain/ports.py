@@ -46,6 +46,10 @@ class RaspberryPiRepository(ABC):
     def update_raspberry(self, raspberry: RaspberryPi):
         pass
 
+    @abstractmethod
+    def get_by_mac_address(self, mac_address) -> RaspberryPi:
+        pass
+
 
 class OperatingSystemRepository(ABC):
 

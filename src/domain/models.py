@@ -2,12 +2,16 @@ import uuid
 from ipaddress import ip_address
 from typing import List
 
+from services.configs_manipulation import edit_fstab_conf
+from services.image_manipulation import create_new_distributed_image
+
 
 class OperatingSystem:
-    def __init__(self, name, path, os_id: uuid.UUID = None):
+    def __init__(self, name, path, os_type: str, os_id: uuid.UUID = None):
         self.name = name
         self.path = path
         self.os_id = os_id
+        self.os_type = os_type
 
     def serialize(self):
         pass
@@ -34,22 +38,35 @@ class Cluster:
 
 
 class RaspberryPi:
-
     operating_system_id: OperatingSystem = None
     raspberry_id: uuid.UUID = None
-    alive : bool = None
+    alive: bool = None
 
-    def __init__(self, name, address: ip_address, mac_address: str,  operating_system_id: OperatingSystem = None, cluster_id: uuid.UUID = None,
-                 raspberry_id: uuid.UUID = None):
+    def __init__(self, name, address: ip_address, mac_address: str, serial_number: str,
+                 operating_system_id: OperatingSystem = None,
+                 cluster_id: uuid.UUID = None, raspberry_id: uuid.UUID = None):
         self.name = name
         self.address = address
         self.operating_system_id = operating_system_id if not None else self.operating_system_id
         self.cluster_id = cluster_id
         self.raspberry_id = raspberry_id if not None else self.raspberry_id
         self.mac_address = mac_address
+        self.serial_number = serial_number
 
-    def change_os(self, os_obj: OperatingSystem):
-        print("Changing OS")
+    def change_os(self, image_to_distribute: OperatingSystem, new_image_id: uuid.UUID) -> OperatingSystem:
+        """
+        """
+        image_path = create_new_distributed_image(image_to_distribute.path, new_image_id=new_image_id)
+        edit_fstab_conf(os_id=new_image_id, raspberry_serial=self.serial_number)
+        self._reboot()
+        return OperatingSystem(name=image_to_distribute.name, os_type="distributed", os_id=new_image_id,
+                               path=image_path)
+
+    def refresh_os(self):
+        pass
+
+    def _reboot(self):
+        print("Executing reboot on machine")
 
     def serialize(self):
         pass

@@ -1,16 +1,29 @@
 import argparse
 import pathlib
 
-from src.domain.config_loader import ConfigLoader
+from sqlalchemy.orm import sessionmaker
+
+from adapters.data.sql import SQLUnitOfWorkManager
+from services.operating_systems import AddOperatingSystemHandler
+from settings import Settings
+
+session_factory = sessionmaker(bind=Settings.database_engine)
 
 
-def start():
+if __name__ == '__main__':
+
     parser = argparse.ArgumentParser()
-    parser.add_argument("--config", type=pathlib.Path, help="Path to config file.")
+    subparsers = parser.add_subparsers(help='Possible options', dest="command")
+
+    parser_add_img = subparsers.add_parser('add_img', help='Allows to add Golden image')
+    parser_add_img.add_argument("--system_name", type=str, help="Name for new golden Image")
+    parser_add_img.add_argument('--system_src', type=str, help='Source directory for system files')
+
+    parser_add_img.add_argument('--boot_src', type=str, help="Source directory for boot files.")
 
     args = parser.parse_args()
 
-    loader = ConfigLoader()
-    objects = loader.load_from_yaml_file(args.config)
-    print(objects)
-
+    if args.command == "add_img":
+        db_manager = SQLUnitOfWorkManager(session_factory)
+        handler = AddOperatingSystemHandler(db_manager)
+        handler.handle(args.system_name, args.system_src, args.boot_src)

@@ -6,7 +6,7 @@ PYTHON 			:= $(VENV)/bin/python
 DHCP_CONF_DST   := /etc/dhcp/dhcpd.conf
 DHCP_SETUP_DST  := /etc/default/isc-dhcp-server
 TFTP_CONF_DST   := /etc/default/tftpd-hpa
-TFTP_SERVER_DST := $(SERVER_BOOT_FILE_LOCATION)/tftpboot
+TFTP_SERVER_DST := $(IMAGE_STORE)/tftpboot
 VENV            := venv/bin/python
 
 install-venv:

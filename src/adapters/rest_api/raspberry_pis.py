@@ -28,8 +28,11 @@ def add_raspberry_pi(body: dict):
     return "Success", 201
 
 
-def change_os(id, body: dict):
+def change_os(mac_address, body: dict):
     db_manager = SQLUnitOfWorkManager(session_factory)
     handler = ChangeOSHandler(db_manager)
     handler.handle(raspberry_id=id, os_id=body["os_id"])
     return 204
+
+def refresh_os(mac_address):
+    pass

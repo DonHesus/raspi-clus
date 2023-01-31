@@ -56,12 +56,11 @@ class RaspberryPi:
     def change_os(self, image_to_distribute: OperatingSystem, new_image_id: uuid.UUID) -> OperatingSystem:
         """
         """
-        if image_to_distribute.os_type == "golden":
-            new_image_path = create_new_distributed_image(image_to_distribute.path, new_image_id=new_image_id)
-        edit_fstab_conf()
+        image_path = create_new_distributed_image(image_to_distribute.path, new_image_id=new_image_id)
+        edit_fstab_conf(os_id=new_image_id, raspberry_serial=self.serial_number)
         self._reboot()
         return OperatingSystem(name=image_to_distribute.name, os_type="distributed", os_id=new_image_id,
-                               path=new_image_path)
+                               path=image_path)
 
     def refresh_os(self):
         pass

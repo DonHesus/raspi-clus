@@ -23,4 +23,5 @@ class Settings:
     image_store = Path(os.environ.get("IMAGE_STORE"))
     boot_location = Path(os.environ.get("TFTP_SERVER_DST"))
     nfs_directory = Path(os.environ.get("NFS_SERVING_DIR"))
+    fstab_config = Path(os.environ.get("FSTAB_CONF"))
 

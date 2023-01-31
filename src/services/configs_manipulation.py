@@ -22,14 +22,14 @@ def _generate_node_string(name, mac_address, address, boot_location: Path, serve
     return NEW_RASPBERRY_DHCP_SECTION_TEMPLATE
 
 
-def _generate_fstab_entry():
-    FSTAB_ENTRY = ""
+def _generate_fstab_entry(os_id, raspberry_serial):
+    fstab_entry = f"/mnt/image_store/{os_id}/boot /mnt/cluster/tftpboot/{raspberry_serial} none defaults,bind 0 0"
+    return fstab_entry
 
 
 def add_new_node(raspberry_body: dict):
     _create_new_node_dir(raspberry_body["name"], raspberry_body["serial_number"])
     _add_dhcpd_entry(raspberry_body, Settings.dhcp_configuration_file, Settings.server_address, Settings.boot_location)
-    _add_node_to_exports(Settings.nfs_directory, raspberry_body["name"])
 
 
 def _get_number_of_nodes(file: Path):
@@ -54,10 +54,6 @@ def _add_dhcpd_entry(raspberry_body: dict, dhcp_conf: Path, server_address: str,
         conf_file.write(replaced.encode())
 
 
-def _add_fstab_entry():
-    pass
-
-
 def _create_new_node_dir(node_name, serial_number):
     proc = subprocess.Popen(f"sudo mkdir {Settings.nfs_directory}/{node_name}", stdout=subprocess.PIPE,
                             shell=True)
@@ -73,23 +69,22 @@ def edit_cmdline_entry():
     pass
 
 
-def edit_fstab_conf():
-    fstab_entry = _generate_fstab_entry()
+def edit_fstab_conf(os_id, raspberry_serial):
+    fstab_entry = _generate_fstab_entry(os_id, raspberry_serial)
 
-    with open("C:\Sandbox\\fstab_template", "rb") as fstab_conf:
+    with open(Settings.fstab_config, "rb") as fstab_conf:
         conf = fstab_conf.read()
 
-    with open("C:\Sandbox\\fstab_template", "wb") as fstab_conf:
-        content = conf.decode()
-        replaced = content.replace("/mnt/image_store/1c43edb8-753c-47bc-92eb-b3f6b1c399ef/boot"
-                                   " /mnt/cluster/tftpboot/328b9d26 none defaults,bind 0 0", "new_fstab")
-        fstab_conf.write(replaced.encode())
+    content = conf.decode()
+    match = re.search(rf"{raspberry_serial}", content, re.MULTILINE)
 
-
-def _add_node_to_exports(nfs_directory, node_name):
-    proc = subprocess.Popen(f"sudo echo \"{nfs_directory}/{node_name}"
-                            f" 192.168.50.20/24(rw,sync,no_subtreee_check,no_root_squash\" >> /etc/exports")
-    proc.communicate()
+    if match.group():
+        with open(Settings.fstab_config, "wb") as fstab_conf:
+            replaced = content.replace(match.group(), fstab_entry)
+            fstab_conf.write(replaced.encode())
+    else:
+        with open(Settings.fstab_config, "ab") as fstab_conf:
+            fstab_conf.write(fstab_entry.encode())
 
 
 def restart_services():

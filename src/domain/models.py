@@ -2,6 +2,8 @@ import uuid
 from ipaddress import ip_address
 from typing import List
 
+import paramiko as paramiko
+
 from services.configs_manipulation import edit_fstab_conf
 from services.image_manipulation import create_new_distributed_image
 
@@ -54,8 +56,6 @@ class RaspberryPi:
         self.serial_number = serial_number
 
     def change_os(self, image_to_distribute: OperatingSystem, new_image_id: uuid.UUID) -> OperatingSystem:
-        """
-        """
         image_path = create_new_distributed_image(image_to_distribute.path, new_image_id=new_image_id)
         edit_fstab_conf(os_id=new_image_id, raspberry_serial=self.serial_number)
         self._reboot()
@@ -67,6 +67,10 @@ class RaspberryPi:
 
     def _reboot(self):
         print("Executing reboot on machine")
+        ssh = paramiko.SSHClient()
+        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        ssh.connect(self.address, username="pi", password="raspberry", timeout=10)
+        ssh.exec_command("/sbin/reboot -f > /dev/null 2>%1 %")
 
     def serialize(self):
         pass

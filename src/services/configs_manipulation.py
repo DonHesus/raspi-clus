@@ -65,10 +65,6 @@ def _create_new_node_dir(node_name, serial_number):
     proc.communicate()
 
 
-def edit_cmdline_entry():
-    pass
-
-
 def edit_fstab_conf(os_id, raspberry_serial):
     fstab_entry = _generate_fstab_entry(os_id, raspberry_serial)
 

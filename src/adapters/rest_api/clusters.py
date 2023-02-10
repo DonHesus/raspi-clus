@@ -2,7 +2,8 @@ from sqlalchemy.orm import sessionmaker
 
 from settings import Settings
 from src.adapters.data.sql import SQLUnitOfWorkManager
-from src.services.clusters import GetAllClustersHandler, AddClusterHandler, GetSingleClusterHandler
+from src.services.clusters import GetAllClustersHandler, AddClusterHandler, GetSingleClusterHandler, \
+    AddRaspberryPiToClusterHandler
 
 session_factory = sessionmaker(bind=Settings.database_engine)
 
@@ -26,3 +27,10 @@ def get_cluster(id: int):
     handler = GetSingleClusterHandler(db_manager)
     cluster = handler.handle(id)
     return cluster, 200
+
+
+def add_raspberry_to_cluster(id: str, body: dict):
+    db_manager = SQLUnitOfWorkManager(session_factory)
+    handler = AddRaspberryPiToClusterHandler(db_manager)
+    handler.handle(id, mac_address=body["mac_address"])
+    return 204

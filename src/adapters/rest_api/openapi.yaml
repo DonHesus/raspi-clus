@@ -55,6 +55,27 @@ paths:
         404:
           $ref: "#/components/responses/EntityNotFound404"
 
+    post:
+      description: "Add RaspberryPi node to existing cluster"
+      summary: "AddRaspberryToCluster"
+      operationId: src.adapters.rest_api.clusters.add_raspberry_to_cluster
+      tags:
+        - Clusters
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: "Identification number of a cluster"
+      requestBody:
+        $ref: "#/components/requestBodies/ClusterAddRaspberryPiBody"
+      responses:
+        204:
+          description: Ok
+        404:
+          $ref: "#/components/responses/EntityNotFound404"
+
   /raspberries:
     get:
       description: "Returns list of all Raspberries objects"
@@ -297,6 +318,15 @@ components:
           schema:
             $ref: "#/components/schemas/Cluster"
 
+    ClusterAddRaspberryPiBody:
+      description: "Body of the request meant to add RaspberryPi do Cluster"
+      content:
+        application/json:
+          schema:
+            properties:
+              mac_address:
+                $ref: "#/components/schemas/MacAddress"
+
     RaspberryPiAddBody:
       description: "Body of a Raspberry Pi"
       content:
@@ -371,8 +401,7 @@ components:
           type: string
           example: "148-0fasjfa=r-15-ija;f"
         mac_address:
-          type: string
-          example: "8A4f1b23c454"
+          $ref: "#/components/schemas/MacAddress"
         serial_number:
           type: string
           example: "328b9d26"
@@ -421,3 +450,8 @@ components:
       type: array
       items:
         $ref: "#/components/schemas/OperatingSystem"
+
+    MacAddress:
+      description: "Mac address of the raspberry Pi"
+      type: string
+      example: "8A4f1b23c454"

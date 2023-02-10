@@ -41,6 +41,9 @@ Next step is to run raspi-config tool and change boot mode in advanced settings 
 
 After reboot make sure that result of `vcgencmd bootloader_config` returns sections with `BOOT_ORDER=0xf21` value. 
 If value is correct, you can shut down Raspberry Pi and disconnect SD card.
+
+Turn on ip tables
+cgroup enebaled
 ___
 
 ## Image Preparation

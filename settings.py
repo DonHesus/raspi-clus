@@ -18,6 +18,7 @@ class Settings:
     database_url = f"postgresql+psycopg2://{db_user}:{db_password}@{db_uri}:{db_port}/{db_name}"
     database_engine = create_engine(database_url, echo=True)
 
+    server_token = os.environ.get("K3S_TOKEN")
     dhcp_configuration_file = Path(os.environ.get('DHCPD_CONF_FILE'))
     server_address = Path(os.environ.get("SERVER_ADDRESS"))
     image_store = Path(os.environ.get("IMAGE_STORE"))

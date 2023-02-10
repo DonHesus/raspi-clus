@@ -8,7 +8,7 @@ def create_new_distributed_image(golden_image_path, new_image_id):
     cp_proc = subprocess.Popen(f"cp -ax {golden_image_path} {Settings.image_store}/{new_image_id}",
                                stdout=subprocess.PIPE, shell=True)
     cp_proc.communicate()
-    
+
     _edit_cmdline(new_image_id)
     _edit_fstab(new_image_id)
     return f"{Settings.image_store}/{new_image_id}"
@@ -30,6 +30,7 @@ def _edit_cmdline(new_image_id):
 
     with open(config_path, "wb") as cmdline:
         cmdline.write(content.encode())
+
 
 def _edit_fstab(new_image_id):
     config_path = f"{Settings.server_address}:{Settings.image_store}/{new_image_id}/etc/fstab"

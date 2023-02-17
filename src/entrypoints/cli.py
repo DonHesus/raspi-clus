@@ -1,16 +1,20 @@
 import argparse
-import pathlib
+import sys
+from dotenv import load_dotenv
+from pathlib import Path
 
-from sqlalchemy.orm import sessionmaker
-
-from adapters.data.sql import SQLUnitOfWorkManager
-from services.operating_systems import AddOperatingSystemHandler
-from settings import Settings
-
-session_factory = sessionmaker(bind=Settings.database_engine)
+sys.path.append(str(Path(__file__).parent.parent.parent))
+sys.path.append(str(Path(__file__).parent.parent))
+load_dotenv(str(Path(__file__).parent.parent.parent) + "/.env")
 
 
 if __name__ == '__main__':
+    from sqlalchemy.orm import sessionmaker
+    from src.adapters.data.sql import SQLUnitOfWorkManager
+    from src.services.operating_systems import AddOperatingSystemHandler
+    from settings import Settings
+
+    session_factory = sessionmaker(bind=Settings.database_engine)
 
     parser = argparse.ArgumentParser()
     subparsers = parser.add_subparsers(help='Possible options', dest="command")

@@ -1,4 +1,5 @@
 import paramiko
+import subprocess
 
 
 def execute_ssh_raspberry_command(command: str, address: str, username="pi", password="raspberry"):
@@ -9,4 +10,6 @@ def execute_ssh_raspberry_command(command: str, address: str, username="pi", pas
 
 
 def execute_server_command(command: str):
-    pass
+    proc = subprocess.Popen(command, stdout=subprocess.PIPE, shell=True)
+    return proc.communicate()
+

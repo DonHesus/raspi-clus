@@ -4,8 +4,8 @@ from typing import List
 
 import paramiko as paramiko
 
-from services.configs_manipulation import edit_fstab_conf
-from services.image_manipulation import create_new_distributed_image
+from src.services.configs_manipulation import edit_fstab_conf
+from src.services.image_manipulation import create_new_distributed_image
 
 
 class OperatingSystem:

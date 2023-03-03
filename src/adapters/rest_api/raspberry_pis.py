@@ -1,7 +1,7 @@
 from settings import Settings
 from src.adapters.data.sql import SQLUnitOfWorkManager
 from src.services.raspberry_pis import GetAllRaspberries, AddRaspberryPiHandler, GetSingleRaspberryPiHandler, \
-    ChangeOSHandler
+    ChangeOSHandler, RefreshOSHandler
 from src.adapters.data import sessionmaker
 
 session_factory = sessionmaker(bind=Settings.database_engine)
@@ -31,8 +31,12 @@ def add_raspberry_pi(body: dict):
 def change_os(mac_address, body: dict):
     db_manager = SQLUnitOfWorkManager(session_factory)
     handler = ChangeOSHandler(db_manager)
-    handler.handle(raspberry_id=id, os_id=body["os_id"])
+    handler.handle(mac_address=mac_address, os_id=body["os_id"])
     return 204
 
+
 def refresh_os(mac_address):
-    pass
+    db_manager = SQLUnitOfWorkManager(session_factory)
+    handler = RefreshOSHandler(db_manager)
+    handler.handle(mac_address)
+    return 204

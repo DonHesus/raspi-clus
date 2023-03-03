@@ -20,9 +20,11 @@ class Settings:
 
     server_token = os.environ.get("K3S_TOKEN")
     dhcp_configuration_file = Path(os.environ.get('DHCPD_CONF_FILE'))
-    server_address = Path(os.environ.get("SERVER_ADDRESS"))
+    server_address = os.environ.get("SERVER_ADDRESS")
+    server_app_address = os.environ.get("SERVER_PRIMARY_IP_ADDRESS")
     image_store = Path(os.environ.get("IMAGE_STORE"))
     boot_location = Path(os.environ.get("TFTP_SERVER_DST"))
     nfs_directory = Path(os.environ.get("NFS_SERVING_DIR"))
     fstab_config = Path(os.environ.get("FSTAB_CONF"))
+    logging_file = Path(os.environ.get("LOGGING_FILE"))
 

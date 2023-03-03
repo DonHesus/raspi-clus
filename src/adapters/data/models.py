@@ -1,15 +1,15 @@
 import uuid
 
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import String, Column, Date, ForeignKey
+from sqlalchemy import String, Column, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
 from sqlalchemy_utils import UUIDType, ChoiceType
 
 db = SQLAlchemy()
 
 OS_TYPES = [
-    (u'Golden', u'Golden'),
-    (u'Distributed', u'Distributed'),
+    (u'golden', u'Golden'),
+    (u'distributed', u'Distributed'),
 
 ]
 
@@ -22,13 +22,15 @@ class OperatingSystem(db.Model):
     path = Column(String, nullable=False)
     os_type = Column(ChoiceType(OS_TYPES), nullable=False)
     raspberry_pis = relationship("RaspberryPi", backref="OS")
+    golden_image_id = Column(UUIDType, nullable=True)
 
     def as_dict(self):
         return {"id": self.id,
                 "name": self.name,
                 "path": self.path,
-                "os_type": self.os_type,
-                "raspberry_pis": [raspberry.as_dict() for raspberry in self.raspberry_pis]
+                "os_type": self.os_type.value,
+                "raspberry_pis": [raspberry.as_dict() for raspberry in self.raspberry_pis],
+                "golden_image_id": self.golden_image_id
                 }
 
 
@@ -60,7 +62,7 @@ class RaspberryPi(db.Model):
     serial_number = Column(String, nullable=False)
     operating_system_id = Column(UUIDType, ForeignKey("operating_systems.id"))
     cluster_id = Column(UUIDType, ForeignKey('clusters.id'))
-    last_alive = Column(Date, nullable=True)
+    last_alive = Column(DateTime, nullable=True)
 
     def as_dict(self):
         return {"id": self.id,

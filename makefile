@@ -44,11 +44,13 @@ setup_server:
 	sudo cp system_files/tftp_config_template $(TFTP_CONF_DST)
 	sudo sed -i 's#<tftp_location>#$(TFTP_SERVER_DST)#g' $(TFTP_CONF_DST)
 	sudo chown tftp:tftp $(TFTP_SERVER_DST)
+	echo "${NFS_SERVING_DIR} ${SERVER_ADDRESS}/24(rw,sync,no_subtree_check,no_root_squash)" >> /etc/exports
 
 
 install: install-k3s setup_server install-venv
 	@echo -e ${GREEN}Save this token to the .env file under K3S_TOKEN${NO_COLOR}
-	@sudo cat /var/lib/rancher/k3s/server/node-token
+	@sudo cat /var/lib/rancher/k3s/server/token
+	@echo -e ${GREEN}After saving Token to a env file, reboot your system{NO_COLOR}
 
 run-db:
 	echo "Running DB"
@@ -59,7 +61,7 @@ stop-db:
 	echo "Stopping DB"
 	docker compose down
 
-run_app:
+run-app:
 	PYTHONPATH=${PYTHONPATH}:"$(shell pwd)/src" $(PYTHON) src/entrypoints/flask_app.py
 
 run_test:

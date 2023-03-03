@@ -1,3 +1,4 @@
+import logging
 import pathlib
 import connexion
 from sqlalchemy.orm import sessionmaker
@@ -5,6 +6,14 @@ from src.adapters.data.models import db
 
 from settings import Settings
 
+logger = logging.getLogger("raspi_clus_server")
+formatter = logging.Formatter(fmt='%(asctime)s %(levelname)-8s %(message)s',
+                              datefmt='%Y-%m-%d %H:%M:%S')
+logger.setLevel(logging.DEBUG)
+fh = logging.FileHandler(Settings.logging_file)
+fh.setFormatter(formatter)
+fh.setLevel(logging.DEBUG)
+logger.addHandler(fh)
 
 session_factory = sessionmaker(bind=Settings.database_engine)
 
@@ -27,4 +36,5 @@ def create_app():
 
 
 if __name__ == '__main__':
+    logger.info("Raspi clus starting")
     create_app().run("0.0.0.0")

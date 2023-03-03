@@ -23,8 +23,8 @@ class AddOperatingSystemHandler(Handler):
         os_id = uuid.uuid4()
         golden_image_path = Path(Settings.image_store) / "golden_images" / f"{os_id}"
         with self.manager.start() as uow:
-            system_os = OperatingSystem(name=name, path=golden_image_path, os_id=os_id, os_type="golden")
-            add_new_golden_image(system_files_path=system_src, boot_dir_path=boot_src)
+            system_os = OperatingSystem(name=name, path=golden_image_path, id=os_id, os_type="golden")
+            add_new_golden_image(system_files_path=system_src, boot_dir_path=boot_src, path_to_store=golden_image_path)
             uow.operating_systems.add_operating_system(system_os)
 
 

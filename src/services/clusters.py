@@ -40,9 +40,12 @@ class AddRaspberryPiToClusterHandler(Handler):
     def handle(self, id, mac_address: Dict):
         with self.manager.start() as uow:
             cluster_to_update = uow.clusters.get_by_id(id)
-            raspberry_to_add = uow.raspberries.get_by_mac(mac_address)
+            raspberry_to_add = uow.raspberry_pis.get_by_mac_address(mac_address)
             cluster_to_update.raspberry_pis.append(raspberry_to_add)
-            execute_ssh_raspberry_command(command=f"curl -sfL https://get.k3s.io | "
-                                                  f"K3S_URL=https://{Settings.server_address}:6443 "
-                                                  f"K3S_TOKEN={Settings.server_token} sh -",
+            execute_ssh_raspberry_command(command=f"k3s agent "
+                                                  f"--token value={Settings.server_token} "
+                                                  f"--node-name={raspberry_to_add.name} "
+                                                  f"--server value={Settings.server_address}:6443 "
+                                                  f"--snapshotter=native",
                                           address=raspberry_to_add.address)
+

@@ -20,7 +20,7 @@ class SQLClusterRepository(ClusterRepository):
         return DBCluster.query.all()
 
     def get_by_id(self, cluster_id: UUID):
-        cluster = DBCluster.query.get({"id" : cluster_id})
+        cluster = self._session.query(DBCluster).get({"id": cluster_id})
         return cluster
 
     def get_by_name(self, cluster_name):
@@ -44,24 +44,25 @@ class SQLRaspberryPiRepository(RaspberryPiRepository):
 
     def add_raspberry_pi(self, raspberry: RaspberryPi):
         raspberry_to_add = DBRaspberryPi(id=raspberry.raspberry_id, name=raspberry.name, address=raspberry.address,
-                                         cluster_id=raspberry.cluster_id, mac_address=raspberry.mac_address)
+                                         cluster_id=raspberry.cluster_id, mac_address=raspberry.mac_address,
+                                         serial_number=raspberry.serial_number)
         self._session.add(raspberry_to_add)
 
     def get_by_id(self, raspberry_id: UUID) -> RaspberryPi:
         return self._session.query(DBRaspberryPi).get({"id": raspberry_id})
 
-    def get_by_mac_address(self, mac_address: str) -> RaspberryPi:
-        return self._session.query(DBRaspberryPi).get({"mac_address": mac_address})
+    def get_by_mac_address(self, mac_address: str) -> DBRaspberryPi:
+        return self._session.query(DBRaspberryPi).filter(DBRaspberryPi.mac_address == mac_address)[0]
 
     def update_raspberry(self, raspberry: RaspberryPi):
         pass
 
-    def update_raspberry_system(self, raspberry_id, os_id):
-        raspberry_obj = self._session.query(DBRaspberryPi).get({"id": raspberry_id})
+    def update_raspberry_system(self, mac_address, os_id):
+        raspberry_obj = self.get_by_mac_address(mac_address)
         raspberry_obj.operating_system_id = os_id
 
-    def update_last_alive(self, raspberry_id, date):
-        raspberry_obj = self._session.query(DBRaspberryPi).get({"id": raspberry_id})
+    def update_last_alive(self, mac_address, date):
+        raspberry_obj = self.get_by_mac_address(mac_address)
         raspberry_obj.last_alive = date
 
 
@@ -77,7 +78,9 @@ class SQLOperatingSystemRepository(OperatingSystemRepository):
         return DBOperatingSystem.query.get({"id": os_id})
 
     def add_operating_system(self, operating_system: OperatingSystem):
-        os_to_add = DBOperatingSystem(id = operating_system.os_id, name=operating_system.name, path=operating_system.path)
+        os_to_add = DBOperatingSystem(id=operating_system.os_id, name=operating_system.name,
+                                      path=str(operating_system.path), os_type=operating_system.os_type,
+                                      golden_image_id=operating_system.golden_image_id)
         self._session.add(os_to_add)
 
     def update_operating_system(self, operating_system: OperatingSystem):

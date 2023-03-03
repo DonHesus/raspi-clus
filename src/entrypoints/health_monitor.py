@@ -64,7 +64,7 @@ if __name__ == '__main__':
             mac_address = output_dict[0]["address"]
             logger.info(f"Sending status to the server, address: {config.SERVER_ADDRESS}/health/{mac_address}")
             try:
-                post(f"{config.SERVER_ADDRESS}/health/{mac_address}")
+                post(f"http://{config.SERVER_ADDRESS}/health/{mac_address}")
             except Exception as error:
                 logger.info(f"Error occured error msg: {error.args}")
                 sys.exit(0)
